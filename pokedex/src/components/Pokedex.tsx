@@ -1,6 +1,15 @@
 import { Component } from 'react';
 import axios from 'axios';
 
+type Ability = {
+    name: string; 
+    url: string;
+}
+
+type EvolutionChain = {
+    url: string;
+}
+
 type Pokemon = {
   weight: number;
   height: number;
@@ -9,6 +18,8 @@ type Pokemon = {
   };
   name: string;
   url: string;
+  abilities: Ability[];
+  evolution_chain: EvolutionChain;
 };
 
 interface PokedexState {
@@ -33,14 +44,24 @@ class Pokedex extends Component<{}, PokedexState> {
     try {
       const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=151');
       const pokemonList: Pokemon[] = response.data.results;
-
+  
       const pokemonWithDetailsPromises = pokemonList.map(async (pokemon) => {
         const pokemonResponse = await axios.get(pokemon.url);
-        return pokemonResponse.data;
+        const speciesResponse = await axios.get(pokemonResponse.data.species.url);
+        const evolutionResponse = await axios.get(speciesResponse.data.evolution_chain.url);
+  
+        const pokemonDetails: Pokemon = {
+          ...pokemonResponse.data,
+          abilities: pokemonResponse.data.abilities.map((ability: any) => ability.ability),
+          species: speciesResponse.data,
+          evolution_chain: evolutionResponse.data.chain,
+        };
+  
+        return pokemonDetails;
       });
-
+  
       const pokemonWithDetails = await Promise.all(pokemonWithDetailsPromises);
-
+  
       this.setState({
         pokemonList: pokemonWithDetails,
         selectedPokemon: null,
@@ -49,7 +70,7 @@ class Pokedex extends Component<{}, PokedexState> {
       console.error('Error fetching Pokemon list:', error);
     }
   };
-
+  
   render() {
     const { pokemonList, selectedPokemon } = this.state;
 
@@ -69,6 +90,12 @@ class Pokedex extends Component<{}, PokedexState> {
             <img src={selectedPokemon.sprites.front_default} alt={selectedPokemon.name} />
             <p>Height: {selectedPokemon.height}</p>
             <p>Weight: {selectedPokemon.weight}</p>
+            <p>Abilities:</p>
+            <ul>
+                {selectedPokemon.abilities.map((ability) => (
+                    <li key={ability.name}>{ability.name}</li>
+                ))}
+            </ul>
           </div>
         )}
       </div>
