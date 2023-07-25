@@ -1,31 +1,9 @@
 import { Component } from 'react';
 import axios from 'axios';
-
-type Ability = {
-    name: string; 
-    url: string;
-}
-
-type EvolutionChain = {
-    url: string;
-}
-
-type Pokemon = {
-  weight: number;
-  height: number;
-  sprites: {
-    front_default: string;
-  };
-  name: string;
-  url: string;
-  abilities: Ability[];
-  evolution_chain: EvolutionChain;
-};
-
-interface PokedexState {
-  pokemonList: Pokemon[];
-  selectedPokemon: Pokemon | null;
-}
+import { 
+  Pokemon,
+  PokedexState 
+} from '../utils/types';
 
 class Pokedex extends Component<{}, PokedexState> {
   constructor(props: {}) {
