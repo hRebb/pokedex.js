@@ -66,6 +66,23 @@ const PokemonDetail = () => {
     return null;
   };
 
+  const getEvolutionFamily = (chain: EvolutionChain): string[] => {
+    const family: string[] = [];
+
+    if (chain.species && chain.species.name) {
+      family.push(chain.species.name);
+    }
+
+    if (chain.evolves_to && chain.evolves_to.length > 0){
+      chain.evolves_to.forEach((evolution: EvolutionChain) => {
+        console.log("Evolution Name:", evolution.species.name);
+        family.push(...getEvolutionFamily(evolution))
+      });
+    }
+
+    return family;
+  }
+
   return (
     <div>
       {pokemonDetails ? (
@@ -79,6 +96,14 @@ const PokemonDetail = () => {
           <ul>
             {pokemonDetails.abilities.map((ability) => (
               <li key={ability.name}>{ability.name}</li>
+            ))}
+          </ul>
+          <p>
+            Evolution Family :
+          </p>
+          <ul>
+            {evolutionChain && getEvolutionFamily(evolutionChain).map((pokemonName) => (
+              <li key={pokemonName}>{pokemonName}</li>
             ))}
           </ul>
           <Link to="/">Back to List</Link>
