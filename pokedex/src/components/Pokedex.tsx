@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { 
   Pokemon,
   PokedexState 
@@ -58,7 +59,9 @@ class Pokedex extends Component<{}, PokedexState> {
         <ul>
           {pokemonList.map((pokemon) => (
             <li key={pokemon.name} onClick={() => this.handlePokemonSelect(pokemon)}>
-              {pokemon.name}
+              <Link to={`/pokemon/${pokemon.name}`}>
+                {pokemon.name}
+              </Link>
             </li>
           ))}
         </ul>

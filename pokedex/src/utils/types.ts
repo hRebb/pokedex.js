@@ -23,7 +23,3 @@ export interface PokedexState {
     pokemonList: Pokemon[];
     selectedPokemon: Pokemon | null;
 }
-
-export interface pokemonDetailParams {
-    [key: string]: string;
-}
