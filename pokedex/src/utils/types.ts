@@ -15,6 +15,7 @@ export type Pokemon = {
     height: number;
     sprites : {
         front_default: string;
+        back_default: string;
     }
     name: string;
     url: string;

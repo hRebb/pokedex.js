@@ -40,8 +40,8 @@ const PokemonDetail = () => {
 
   const goToNextPokemon = () => {
     if (evolutionChain && currentPokemonId !== null) {
-      const nextPokemonId = currentPokemonId + 1; // Passage au Pokémon suivant en augmentant l'ID actuel
-      if (nextPokemonId <= 151) { // Assurez-vous que l'ID ne dépasse pas 151 (nombre total de Pokémon dans votre liste)
+      const nextPokemonId = currentPokemonId + 1; 
+      if (nextPokemonId <= 151) { 
         navigate(`/pokemon/${nextPokemonId}`);
       } else {
         navigate("/");
@@ -51,12 +51,10 @@ const PokemonDetail = () => {
 
   const getNextPokemon = (chain: EvolutionChain, currentId: number): Pokemon | null => {
     if (chain.species.id === currentId) {
-      // Si le Pokémon actuel est celui dans la chaîne, renvoyer le Pokémon suivant (s'il y en a)
       if (chain.evolves_to && chain.evolves_to.length > 0) {
         return chain.evolves_to[0].species;
       }
     } else {
-      // Sinon, parcourir la chaîne pour trouver le Pokémon actuel et récursivement chercher le suivant
       for (const evolution of chain.evolves_to || []) {
         const nextPokemon = getNextPokemon(evolution, currentId);
         if (nextPokemon) {
@@ -65,15 +63,16 @@ const PokemonDetail = () => {
       }
     }
 
-    return null; // Aucun Pokémon suivant trouvé
+    return null;
   };
-  
+
   return (
     <div>
       {pokemonDetails ? (
         <div>
-          <h1>{pokemonDetails.name}</h1>
+          <h1>{pokemonDetails.name.toUpperCase()}</h1>
           <img src={pokemonDetails.sprites.front_default} alt={pokemonDetails.name} />
+          <img src={pokemonDetails.sprites.back_default} alt={`${pokemonDetails.name} (Back)`} />
           <p>Height: {pokemonDetails.height}</p>
           <p>Weight: {pokemonDetails.weight}</p>
           <p>Abilities:</p>
