@@ -1,65 +1,62 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
-import { Pokemon } from "../utils/types";
+import { useParams, Link } from 'react-router-dom';
+import { Pokemon, EvolutionChain } from "../utils/types";
 
-class PokemonDetail extends Component {
-  state = {
-    pokemonDetails: null as Pokemon | null,
-  };
+const PokemonDetail = () => {
+  const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
+  const [evolutionChain, setEvolutionChain] = useState<EvolutionChain | null>(null);
 
-  componentDidMount() {
-    const { pokemonName } = useParams<{ pokemonName?: string }>();
+  const { pokemonName } = useParams<{ pokemonName?: string }>();
+
+  useEffect(() => {
     if (pokemonName) {
-        this.fetchPokemonDetails(pokemonName);
+      fetchPokemonDetails(pokemonName);
     }
-  }
+  }, [pokemonName]);
 
-  fetchPokemonDetails = async (pokemonName: string) => {
+  const fetchPokemonDetails = async (pokemonName: string) => {
     try {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
       const speciesResponse = await axios.get(response.data.species.url);
-      const evolutionResponse = await axios.get(speciesResponse.data.evolution_chain.url);
+      const evolutionResponse = await axios.get<EvolutionChain>(speciesResponse.data.evolution_chain.url);
 
       const pokemonDetails: Pokemon = {
         ...response.data,
         abilities: response.data.abilities.map((ability: any) => ability.ability),
         species: speciesResponse.data,
-        evolution_chain: evolutionResponse.data.chain,
+        evolution_chain: evolutionResponse.data,
       };
 
-      this.setState({
-        pokemonDetails,
-      });
+      setPokemonDetails(pokemonDetails);
+      setEvolutionChain(evolutionResponse.data); // Store the entire evolution chain data
     } catch (error) {
       console.error('Error fetching Pokemon details:', error);
     }
   };
 
-  render() {
-    const { pokemonDetails } = this.state;
-
-    return (
-      <div>
-        {pokemonDetails ? (
-          <div>
-            <h1>{pokemonDetails.name}</h1>
-            <img src={pokemonDetails.sprites.front_default} alt={pokemonDetails.name} />
-            <p>Height: {pokemonDetails.height}</p>
-            <p>Weight: {pokemonDetails.weight}</p>
-            <p>Abilities:</p>
-            <ul>
-              {pokemonDetails.abilities.map((ability) => (
-                <li key={ability.name}>{ability.name}</li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {pokemonDetails ? (
+        <div>
+          <h1>{pokemonDetails.name}</h1>
+          <img src={pokemonDetails.sprites.front_default} alt={pokemonDetails.name} />
+          <p>Height: {pokemonDetails.height}</p>
+          <p>Weight: {pokemonDetails.weight}</p>
+          <p>Abilities:</p>
+          <ul>
+            {pokemonDetails.abilities.map((ability) => (
+              <li key={ability.name}>{ability.name}</li>
+            ))}
+          </ul>
+          <Link to="/">Back to List</Link>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
+  );
+};
 
 export default PokemonDetail;
+

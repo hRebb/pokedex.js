@@ -22,7 +22,10 @@ class Pokedex extends Component<{}, PokedexState> {
   fetchPokemonList = async () => {
     try {
       const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=151');
-      const pokemonList: Pokemon[] = response.data.results;
+      const pokemonList: Pokemon[] = response.data.results.map((pokemon: any) => ({
+        ...pokemon,
+        id: parseInt(pokemon.url.split('/').slice(-2, -1)[0]),
+      }));
   
       const pokemonWithDetailsPromises = pokemonList.map(async (pokemon) => {
         const pokemonResponse = await axios.get(pokemon.url);
@@ -60,7 +63,7 @@ class Pokedex extends Component<{}, PokedexState> {
           {pokemonList.map((pokemon) => (
             <li key={pokemon.name} onClick={() => this.handlePokemonSelect(pokemon)}>
               <Link to={`/pokemon/${pokemon.name}`}>
-                {pokemon.name}
+                {pokemon.id} - {pokemon.name}
               </Link>
             </li>
           ))}

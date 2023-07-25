@@ -3,11 +3,14 @@ type Ability = {
     url: string;
 }
 
-type EvolutionChain = {
+export type EvolutionChain = {
+    species: any;
+    evolves_to: any;
     url: string;
 }
 
 export type Pokemon = {
+    id: number;
     weight: number;
     height: number;
     sprites : {
