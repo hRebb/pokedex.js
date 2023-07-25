@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Pokemon, EvolutionChain } from "../utils/types";
 
 const PokemonDetail = () => {
   const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
   const [evolutionChain, setEvolutionChain] = useState<EvolutionChain | null>(null);
+  const [currentPokemonId, setCurrentPokemonId] = useState<number | null>(null);
 
   const { pokemonName } = useParams<{ pokemonName?: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (pokemonName) {
@@ -29,12 +31,43 @@ const PokemonDetail = () => {
       };
 
       setPokemonDetails(pokemonDetails);
-      setEvolutionChain(evolutionResponse.data); // Store the entire evolution chain data
+      setEvolutionChain(evolutionResponse.data);
+      setCurrentPokemonId(response.data.id);
     } catch (error) {
       console.error('Error fetching Pokemon details:', error);
     }
   };
 
+  const goToNextPokemon = () => {
+    if (evolutionChain && currentPokemonId !== null) {
+      const nextPokemonId = currentPokemonId + 1; // Passage au Pokémon suivant en augmentant l'ID actuel
+      if (nextPokemonId <= 151) { // Assurez-vous que l'ID ne dépasse pas 151 (nombre total de Pokémon dans votre liste)
+        navigate(`/pokemon/${nextPokemonId}`);
+      } else {
+        navigate("/");
+      }
+    }
+  };
+
+  const getNextPokemon = (chain: EvolutionChain, currentId: number): Pokemon | null => {
+    if (chain.species.id === currentId) {
+      // Si le Pokémon actuel est celui dans la chaîne, renvoyer le Pokémon suivant (s'il y en a)
+      if (chain.evolves_to && chain.evolves_to.length > 0) {
+        return chain.evolves_to[0].species;
+      }
+    } else {
+      // Sinon, parcourir la chaîne pour trouver le Pokémon actuel et récursivement chercher le suivant
+      for (const evolution of chain.evolves_to || []) {
+        const nextPokemon = getNextPokemon(evolution, currentId);
+        if (nextPokemon) {
+          return nextPokemon;
+        }
+      }
+    }
+
+    return null; // Aucun Pokémon suivant trouvé
+  };
+  
   return (
     <div>
       {pokemonDetails ? (
@@ -50,6 +83,7 @@ const PokemonDetail = () => {
             ))}
           </ul>
           <Link to="/">Back to List</Link>
+          <button onClick={goToNextPokemon}>Next Pokemon</button>
         </div>
       ) : (
         <p>Loading...</p>
@@ -59,4 +93,3 @@ const PokemonDetail = () => {
 };
 
 export default PokemonDetail;
-
