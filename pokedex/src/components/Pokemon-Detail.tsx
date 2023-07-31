@@ -49,7 +49,7 @@ const PokemonDetail = () => {
     }
   };
 
-  const renderEvolutionChain = (chain: EvolutionChain | null) => {
+  const renderEvolutionChain = (chain: EvolutionChain | null): JSX.Element[] => {
     if (!chain || !chain.chain) {
       return [];
     }
@@ -58,23 +58,28 @@ const PokemonDetail = () => {
     const pokemonId = species.url.split('/').reverse()[1];
     const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
   
-    const chainPokemons: JSX.Element[] = [];
-  
-    chainPokemons.push(
+    // Render the current Pokémon in the chain
+    const currentPokemon = (
       <div key={species.name}>
         <p>{species.name}</p>
         <img src={spriteUrl} alt={species.name} />
       </div>
     );
   
-    evolves_to.forEach((evolution) => {
-      chainPokemons.push(...renderEvolutionChain(evolution));
+    // Recursively fetch and render all evolutions in the chain
+    const allEvolutions: JSX.Element[] = [currentPokemon];
+    evolves_to.flatMap((evolution) => {
+      const evolutionChain = renderEvolutionChain(evolution);
+      allEvolutions.push(...evolutionChain);
+      return null;
     });
   
-    return chainPokemons;
+    return allEvolutions;
   };
   
   
+  
+    
   return (
     <div>
       {pokemonDetails ? (
