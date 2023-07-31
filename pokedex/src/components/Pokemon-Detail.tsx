@@ -51,19 +51,27 @@ const PokemonDetail = () => {
 
   const renderEvolutionChain = (chain: EvolutionChain | null) => {
     if (!chain || !chain.chain) {
-      return null;
+      return [];
     }
   
     const { species, evolves_to } = chain.chain;
     const pokemonId = species.url.split('/').reverse()[1];
     const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
   
-    return (
+    const chainPokemons: JSX.Element[] = [];
+  
+    chainPokemons.push(
       <div key={species.name}>
+        <p>{species.name}</p>
         <img src={spriteUrl} alt={species.name} />
-        {evolves_to.length > 0 && evolves_to.map((evolution) => renderEvolutionChain(evolution))}
       </div>
     );
+  
+    evolves_to.forEach((evolution) => {
+      chainPokemons.push(...renderEvolutionChain(evolution));
+    });
+  
+    return chainPokemons;
   };
   
   
