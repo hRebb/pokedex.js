@@ -3,7 +3,7 @@ type Ability = {
     url: string;
 }
 
-export interface EvolutionDetail {
+interface EvolutionDetail {
     gender: any;
     held_item: any;
     item: any;
@@ -20,15 +20,26 @@ export interface EvolutionDetail {
     relative_physical_stats: any;
     time_of_day: string;
     trade_species: any;
-    trigger : {
-        name: string;
-        urls: string;
+    trigger: {
+      name: string;
+      url: string;
     };
     turn_upside_down: boolean;
+  }
+  
+export interface EvolutionChain {
+    baby_trigger_item: any;
+    chain: {
+      evolution_details: EvolutionDetail[];
+      evolves_to: EvolutionChain[];
+      species: {
+        name: string;
+        url: string;
+      };
+    };
+    id: number;
 }
-
-export type EvolutionChain = {}
-
+    
 export type Pokemon = {
     id: number;
     weight: number;

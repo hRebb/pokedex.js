@@ -49,23 +49,24 @@ const PokemonDetail = () => {
     }
   };
 
-  const getNextPokemon = (chain: EvolutionChain, currentId: number): Pokemon | null => {
-    if (chain.species.id === currentId) {
-      if (chain.evolves_to && chain.evolves_to.length > 0) {
-        return chain.evolves_to[0].species;
-      }
-    } else {
-      for (const evolution of chain.evolves_to || []) {
-        const nextPokemon = getNextPokemon(evolution, currentId);
-        if (nextPokemon) {
-          return nextPokemon;
-        }
-      }
+  const renderEvolutionChain = (chain: EvolutionChain | null) => {
+    if (!chain || !chain.chain) {
+      return null;
     }
-
-    return null;
+  
+    const { species, evolves_to } = chain.chain;
+    const pokemonId = species.url.split('/').reverse()[1];
+    const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+  
+    return (
+      <div key={species.name}>
+        <img src={spriteUrl} alt={species.name} />
+        {evolves_to.length > 0 && evolves_to.map((evolution) => renderEvolutionChain(evolution))}
+      </div>
+    );
   };
-
+  
+  
   return (
     <div>
       {pokemonDetails ? (
@@ -81,9 +82,8 @@ const PokemonDetail = () => {
               <li key={ability.name}>{ability.name}</li>
             ))}
           </ul>
-          <p>
-            Evolution Family :
-          </p>
+          <p>Evolution Family:</p>
+          {evolutionChain && renderEvolutionChain(evolutionChain)}
           <Link to="/">Back to List</Link>
           <button onClick={goToNextPokemon}>Next Pokemon</button>
         </div>
