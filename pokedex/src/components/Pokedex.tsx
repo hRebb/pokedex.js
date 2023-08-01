@@ -63,7 +63,7 @@ class Pokedex extends Component<{}, PokedexState> {
           {pokemonList.map((pokemon) => (
             <li key={pokemon.name} onClick={() => this.handlePokemonSelect(pokemon)}>
               <Link to={`/pokemon/${pokemon.name}`}>
-                {pokemon.id} - {pokemon.name}
+                {pokemon.id} - {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
               </Link>
             </li>
           ))}

@@ -10,6 +10,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: Arial, sans-serif;
+    text-align: center;
   }
   
 h1 {
@@ -29,7 +30,6 @@ p {
     color: #fff;
     font-size: 1.2rem;
     margin: 5px;
-    text-align: center;
 }
  
 ul {

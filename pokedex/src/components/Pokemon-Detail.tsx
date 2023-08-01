@@ -58,7 +58,7 @@ const PokemonDetail = () => {
 
     return (
       <div key={species.name}>
-        <h2>{species.name}</h2>
+        <h2>{species.name.charAt(0).toUpperCase() + species.name.slice(1)}</h2>
         <img src={spriteUrl} alt={species.name} />
         {evolves_to && evolves_to.length > 0 && (
           <div>
@@ -81,12 +81,16 @@ const PokemonDetail = () => {
           <p>Abilities:</p>
           <ul>
             {pokemonDetails.abilities.map((ability) => (
-              <li key={ability.name}>{ability.name}</li>
+              <li key={ability.name}>{ability.name.charAt(0).toUpperCase() + ability.name.slice(1)}</li>
             ))}
           </ul>
           <h2>Evolutions:</h2>
           {evolutionChain && renderEvolutions(evolutionChain.chain)}
-          <Link to="/">Back to List</Link>
+          <Link to="/">
+            <button>
+              Back to List
+            </button>
+          </Link>
           <button onClick={goToNextPokemon}>Next Pokemon</button>
         </div>
       ) : (
