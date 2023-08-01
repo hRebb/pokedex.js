@@ -49,37 +49,26 @@ const PokemonDetail = () => {
     }
   };
 
-  const renderEvolutionChain = (chain: EvolutionChain | null): JSX.Element[] => {
-    if (!chain || !chain.chain) {
-      return [];
-    }
-  
-    const { species, evolves_to } = chain.chain;
+  const renderEvolutions = (evolution: any) => {
+    if (!evolution) return null;
+
+    const { species, evolves_to } = evolution;
     const pokemonId = species.url.split('/').reverse()[1];
     const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
-  
-    // Render the current Pokémon in the chain
-    const currentPokemon = (
+
+    return (
       <div key={species.name}>
-        <p>{species.name}</p>
+        <h2>{species.name}</h2>
         <img src={spriteUrl} alt={species.name} />
+        {evolves_to && evolves_to.length > 0 && (
+          <div>
+            {evolves_to.map((nextEvolution: any) => renderEvolutions(nextEvolution))}
+          </div>
+        )}
       </div>
     );
-  
-    // Recursively fetch and render all evolutions in the chain
-    const allEvolutions: JSX.Element[] = [currentPokemon];
-    evolves_to.flatMap((evolution) => {
-      const evolutionChain = renderEvolutionChain(evolution);
-      allEvolutions.push(...evolutionChain);
-      return null;
-    });
-  
-    return allEvolutions;
   };
   
-  
-  
-    
   return (
     <div>
       {pokemonDetails ? (
@@ -95,8 +84,8 @@ const PokemonDetail = () => {
               <li key={ability.name}>{ability.name}</li>
             ))}
           </ul>
-          <p>Evolution Family:</p>
-          {evolutionChain && renderEvolutionChain(evolutionChain)}
+          <h2>Evolutions:</h2>
+          {evolutionChain && renderEvolutions(evolutionChain.chain)}
           <Link to="/">Back to List</Link>
           <button onClick={goToNextPokemon}>Next Pokemon</button>
         </div>
