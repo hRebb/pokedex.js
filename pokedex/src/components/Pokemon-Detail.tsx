@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Pokemon, EvolutionChain } from "../utils/types";
+import { Pokemon, EvolutionChain, PokemonType } from "../utils/types";
 
 const PokemonDetail = () => {
   const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
@@ -76,6 +76,16 @@ const PokemonDetail = () => {
           <h1>{pokemonDetails.name.toUpperCase()}</h1>
           <img src={pokemonDetails.sprites.front_default} alt={pokemonDetails.name} />
           <img src={pokemonDetails.sprites.back_default} alt={`${pokemonDetails.name} (Back)`} />
+          <br></br>
+          <h2 className="pokemon-link">Types :</h2>
+          <ul>
+            {pokemonDetails.types.map((type: PokemonType) => (
+              <li key={type.slot}>
+                {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
+              </li>
+            ))}
+          </ul>
+          <br></br>
           <h2 className="pokemon-link">Caracteristics</h2>
           <p>Height: {pokemonDetails.height}</p>
           <p>Weight: {pokemonDetails.weight}</p>

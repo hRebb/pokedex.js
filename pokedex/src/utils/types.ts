@@ -39,6 +39,14 @@ export interface EvolutionChain {
     };
     id: number;
 }
+
+export interface PokemonType {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+};
     
 export type Pokemon = {
     id: number;
@@ -52,6 +60,7 @@ export type Pokemon = {
     url: string;
     abilities: Ability[];
     evolution_chain: EvolutionChain;
+    types: PokemonType[];
 }
 
 export interface PokedexState {
