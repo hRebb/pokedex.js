@@ -57,7 +57,7 @@ const PokemonDetail = () => {
     const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
 
     return (
-      <div key={species.name}>
+      <div className="pokemon-link" key={species.name}>
         <h2>{species.name.charAt(0).toUpperCase() + species.name.slice(1)}</h2>
         <img src={spriteUrl} alt={species.name} />
         {evolves_to && evolves_to.length > 0 && (
@@ -76,15 +76,18 @@ const PokemonDetail = () => {
           <h1>{pokemonDetails.name.toUpperCase()}</h1>
           <img src={pokemonDetails.sprites.front_default} alt={pokemonDetails.name} />
           <img src={pokemonDetails.sprites.back_default} alt={`${pokemonDetails.name} (Back)`} />
+          <h2 className="pokemon-link">Caracteristics</h2>
           <p>Height: {pokemonDetails.height}</p>
           <p>Weight: {pokemonDetails.weight}</p>
-          <p>Abilities:</p>
+          <br></br>
+          <h2 className="pokemon-link">Abilities:</h2>
           <ul>
             {pokemonDetails.abilities.map((ability) => (
               <li key={ability.name}>{ability.name.charAt(0).toUpperCase() + ability.name.slice(1)}</li>
             ))}
           </ul>
-          <h2>Evolutions:</h2>
+          <br></br>
+          <h2 className="pokemon-link">Evolutions:</h2>
           {evolutionChain && renderEvolutions(evolutionChain.chain)}
           <Link to="/">
             <button>
