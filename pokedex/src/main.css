@@ -38,7 +38,7 @@ ul {
 li {
     color: rgb(6, 3, 46);
     font-size: 1.2rem;
-    list-style-type: square;
+    font-style: italic;
     margin-left: 0px;
 }
   
@@ -70,4 +70,8 @@ button {
 
 .pokemon-list {
     list-style-type: none;
+}
+
+.pokemon-type {
+    font-style: normal;
 }

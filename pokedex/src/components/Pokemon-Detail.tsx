@@ -68,6 +68,49 @@ const PokemonDetail = () => {
       </div>
     );
   };
+
+  const getTypeStyles = (type: string): { color: string; borderRadius: string} => {
+    switch (type) {
+      case "bug":
+        return { color: "#A8B830", borderRadius: "50% 20% / 10% 40%" };
+      case "dark":
+        return { color: "#705848", borderRadius: "50% 20% / 10% 40%" };
+      case "dragon":
+        return { color: "#7038F8", borderRadius: "50% 20% / 10% 40%" };
+      case "electric":
+        return { color: "#f8d030", borderRadius: "50% 20% / 10% 40%" };
+      case "fairy":
+        return { color: "#ee99ac", borderRadius: "50% 20% / 10% 40%" };
+      case "fighting":
+        return { color: "#c03028", borderRadius: "50% 20% / 10% 40%" };
+      case "fire":
+        return { color: "#f08030", borderRadius: "50% 20% / 10% 40%" };
+      case "flying":
+        return { color: "#a890f0", borderRadius: "50% 20% / 10% 40%" };
+      case "ghost":
+        return { color: "#705898", borderRadius: "50% 20% / 10% 40%" };
+      case "grass":
+        return { color: "#78c850", borderRadius: "50% 20% / 10% 40%" };
+      case "ground":
+        return { color: "#e0c068", borderRadius: "50% 20% / 10% 40%" };
+      case "ice":
+        return { color: "#98d8d8", borderRadius: "50% 20% / 10% 40%" };
+      case "normal":
+        return { color: "#a8a878", borderRadius: "50% 20% / 10% 40%" };
+      case "poison":
+        return { color: "#a040a0", borderRadius: "50% 20% / 10% 40%" };
+      case "psy":
+        return { color: "#f85888", borderRadius: "50% 20% / 10% 40%" };
+      case "rock":
+        return { color: "#b8a038", borderRadius: "50% 20% / 10% 40%" };
+      case "steel":
+        return { color: "#b8b8d0", borderRadius: "50% 20% / 10% 40%" };
+      case "water":
+        return { color: "#6890f0", borderRadius: "50% 20% / 10% 40%" };
+      default:
+        return { color: "inherit", borderRadius: "inherit" };
+    }
+  }
   
   return (
     <div>
@@ -79,11 +122,21 @@ const PokemonDetail = () => {
           <br></br>
           <h2 className="pokemon-link">Types :</h2>
           <ul>
-            {pokemonDetails.types.map((type: PokemonType) => (
-              <li key={type.slot}>
+            {pokemonDetails.types.map((type: PokemonType) => {
+              const { color, borderRadius } = getTypeStyles(type.type.name);
+              return (
+                <li 
+                className="pokemon-type" 
+                key={type.slot}
+                style={{
+                  backgroundColor: color,
+                  borderRadius: borderRadius
+                }}
+              >
                 {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
               </li>
-            ))}
+              );
+            })}
           </ul>
           <br></br>
           <h2 className="pokemon-link">Caracteristics</h2>
